@@ -8,7 +8,8 @@ from django.core import serializers
 import json
 from django.shortcuts import get_object_or_404
 
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, Attendance, AttendanceReport, LeaveReportStaff, FeedBackStaffs, StudentResult
+from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, Attendance, AttendanceReport, LeaveReportStaff, FeedBackStaffs, StudentResult, GradingConfiguration
+
 
 
 def staff_home(request):
@@ -330,12 +331,25 @@ def staff_profile_update(request):
 
 
 def staff_add_result(request):
+    # Fetch the grading configuration to check if grading is active
+    config = GradingConfiguration.objects.first()
+
+    # Check if grading is active; if not, render the closed template
+    if config and not config.is_grading_active:
+        return render(request, "staff_template/close_result_template.html")
+
+    # Fetch subjects assigned to the current staff member
     subjects = Subjects.objects.filter(staff_id=request.user.id)
+    # Fetch all session years
     session_years = SessionYearModel.objects.all()
+    
+    # Context data to be passed to the template
     context = {
         "subjects": subjects,
         "session_years": session_years,
     }
+
+    # Render the active grading template when grading is enabled
     return render(request, "staff_template/add_result_template.html", context)
 
 

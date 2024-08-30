@@ -99,7 +99,6 @@
     $(document).ready(function(){
         $("#fetch_student").click(function(){
 
-            // Displaying Students Based on Staff, Course and Session Enrolled
             var subject = $("#subject").val();
             var session_year = $("#session_year").val();
 
@@ -111,31 +110,30 @@
                     var json_data = JSON.parse(response);
                     console.log(json_data);
 
-                    // Creating HTML for student options and existing grades
-                    var div_data = "<div class='form-group'><label>Student List</label> <select class='student_list form-control' name='student_list'>";
+                    var div_data = "<div class='form-group'><label>Student List</label> <select class='student_list form-control' name='student_list' id='student_list'>";
 
                     for (var key in json_data) {
-                        div_data += "<option value='" + json_data[key]['id'] + "'>ID: " + json_data[key]['id'] + " : " + json_data[key]['name'] + "</option>";
+                        div_data += "<option value='" + key + "'>ID: " + json_data[key]['id'] + " : " + json_data[key]['name'] + "</option>";
                     }
 
                     div_data += "</select></div>";
                     div_data += "<div class='form-group'><div class='row'>";
 
-                    // Adding existing grades to the form
+                    // Grade inputs
                     div_data += "<div class='col-lg-6'>";
-                    div_data += "<label>First Quarter : </label><input type='text' name='first_quarter' class='form-control' placeholder='First Quarter' value='" + (json_data[0] ? json_data[0]['first_quarter'] : "") + "' />";
+                    div_data += "<label>First Quarter : </label><input type='text' name='first_quarter' class='form-control' id='first_quarter' placeholder='First Quarter' />";
                     div_data += "</div>";
 
                     div_data += "<div class='col-lg-6'>";
-                    div_data += "<label>Second Quarter : </label><input type='text' name='second_quarter' class='form-control' placeholder='Second Quarter' value='" + (json_data[0] ? json_data[0]['second_quarter'] : "") + "' />";
+                    div_data += "<label>Second Quarter : </label><input type='text' name='second_quarter' class='form-control' id='second_quarter' placeholder='Second Quarter' />";
                     div_data += "</div>";
 
                     div_data += "<div class='col-lg-6'>";
-                    div_data += "<label>Third Quarter : </label><input type='text' name='third_quarter' class='form-control' placeholder='Third Quarter' value='" + (json_data[0] ? json_data[0]['third_quarter'] : "") + "' />";
+                    div_data += "<label>Third Quarter : </label><input type='text' name='third_quarter' class='form-control' id='third_quarter' placeholder='Third Quarter' />";
                     div_data += "</div>";
 
                     div_data += "<div class='col-lg-6'>";
-                    div_data += "<label>Fourth Quarter : </label><input type='text' name='fourth_quarter' class='form-control' placeholder='Fourth Quarter' value='" + (json_data[0] ? json_data[0]['fourth_quarter'] : "") + "' />";
+                    div_data += "<label>Fourth Quarter : </label><input type='text' name='fourth_quarter' class='form-control' id='fourth_quarter' placeholder='Fourth Quarter' />";
                     div_data += "</div>";
 
                     div_data += "</div></div>";
@@ -145,12 +143,29 @@
                     div_data += "</div>";
 
                     $("#student_data").html(div_data);
+
+                    // Initialize grades for the first student
+                    updateGradeFields(json_data, Object.keys(json_data)[0]);
+
+                    // Update grades when the student selection changes
+                    $("#student_list").change(function() {
+                        var selectedStudentKey = $(this).val();
+                        updateGradeFields(json_data, selectedStudentKey);
+                    });
                 },
                 error: function(){
                     alert("Error in Fetching Students.");
                 }
             });
         });
+
+        // Function to update grade fields based on selected student
+        function updateGradeFields(json_data, key) {
+            $("#first_quarter").val(json_data[key] ? json_data[key]['first_quarter'] : "");
+            $("#second_quarter").val(json_data[key] ? json_data[key]['second_quarter'] : "");
+            $("#third_quarter").val(json_data[key] ? json_data[key]['third_quarter'] : "");
+            $("#fourth_quarter").val(json_data[key] ? json_data[key]['fourth_quarter'] : "");
+        }
     });
 </script>
 {% endblock custom_js %}

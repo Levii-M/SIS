@@ -74,6 +74,12 @@ class Students(models.Model):
     objects = models.Manager()
 
 
+# class Assessment(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+
+
+
 class Schedule(models.Model):
     id = models.AutoField(primary_key=True)
     subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE)  # The subject being scheduled
@@ -191,6 +197,13 @@ class StudentResult(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+
+
+class GradingConfiguration(models.Model):
+    is_grading_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "Grading is Active" if self.is_grading_active else "Grading is Inactive"
 
 
 #Creating Django Signals

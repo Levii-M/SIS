@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, Schedule
+from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, Schedule, GradingConfiguration
 from .forms import AddStudentForm, EditStudentForm, AddScheduleForm, EditScheduleForm
 
 
@@ -114,12 +114,21 @@ def add_staff_save(request):
             messages.error(request, "Failed to Add Staff!")
             return redirect('add_staff')
 
-
+def toggle_grading_state(request):
+    grading_config, created = GradingConfiguration.objects.get_or_create(id=1)
+    # Toggle the grading state
+    grading_config.is_grading_active = not grading_config.is_grading_active
+    grading_config.save()
+    
+    # Redirect back to the manage_staff view
+    return redirect('manage_staff')
 
 def manage_staff(request):
     staffs = Staffs.objects.all()
+    grading_config, created = GradingConfiguration.objects.get_or_create(id=1)
     context = {
-        "staffs": staffs
+        "staffs": staffs,
+        "grading_config": grading_config,  # Pass the grading configuration to the template
     }
     return render(request, "hod_template/manage_staff_template.html", context)
 

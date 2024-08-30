@@ -13,7 +13,10 @@ urlpatterns = [
     path('admin_home/', HodViews.admin_home, name="admin_home"),
     path('add_staff/', HodViews.add_staff, name="add_staff"),
     path('add_staff_save/', HodViews.add_staff_save, name="add_staff_save"),
+
     path('manage_staff/', HodViews.manage_staff, name="manage_staff"),
+    path('toggle_grading_state/', HodViews.toggle_grading_state, name='toggle_grading_state'),
+
     path('edit_staff/<staff_id>/', HodViews.edit_staff, name="edit_staff"),
     path('edit_staff_save/', HodViews.edit_staff_save, name="edit_staff_save"),
     path('delete_staff/<staff_id>/', HodViews.delete_staff, name="delete_staff"),
@@ -87,6 +90,7 @@ urlpatterns = [
     path('staff_feedback_save/', StaffViews.staff_feedback_save, name="staff_feedback_save"),
     path('staff_profile/', StaffViews.staff_profile, name="staff_profile"),
     path('staff_profile_update/', StaffViews.staff_profile_update, name="staff_profile_update"),
+
     path('staff_add_result/', StaffViews.staff_add_result, name="staff_add_result"),
     path('staff_add_result_save/', StaffViews.staff_add_result_save, name="staff_add_result_save"),
 
